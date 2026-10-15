@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trilha PMPE – Estude jogando</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f7f2;--card:#fff;--tx:#1b2a3d;--mu:#5b6b7e;--ac:#0f9b82;--sun:#f2a900;--ok:#1b8f4e;--bad:#d64545;--bd:#dde6df;--glow:#d9f5ec;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1726;--card:#16233a;--tx:#e9f0fb;--mu:#9db0c9;--ac:#5ee0c0;--sun:#ffc857;--ok:#6ee7a3;--bad:#ff8a7a;--bd:#243653;--glow:#173a45}}
+:root[data-theme="dark"]{--bg:#0e1726;--card:#16233a;--tx:#e9f0fb;--mu:#9db0c9;--ac:#5ee0c0;--sun:#ffc857;--ok:#6ee7a3;--bad:#ff8a7a;--bd:#243653;--glow:#173a45}
+*,*:before,*:after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--tx);font:500 17px/1.55 Nunito,system-ui,sans-serif;min-height:100vh}
+h1,h2,h3{font-family:Fredoka,Nunito,sans-serif;font-weight:600;margin:0;line-height:1.2}
+.wrap{max-width:720px;margin:0 auto;padding:16px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,summary:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.top h1{font-size:1.5rem}
+.ico{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:6px 10px}
+.hud{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:14px;margin:14px 0}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.pill{background:var(--glow);border-radius:99px;padding:3px 12px;font-weight:700;font-size:.9rem}
+.bar{height:12px;background:var(--bd);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--ac),var(--sun));border-radius:99px;transition:width .5s}
+.small{color:var(--mu);font-size:.9rem}
+.trail{position:relative;margin:22px 0 10px;padding-left:34px}
+.trail:before{content:"";position:absolute;left:15px;top:8px;bottom:8px;width:4px;border-radius:4px;background:repeating-linear-gradient(var(--bd) 0 10px,transparent 10px 18px)}
+.node{position:relative;display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:14px 16px;margin-bottom:14px}
+.node:hover{border-color:var(--ac)}
+.node .dot{position:absolute;left:-34px;top:16px;width:34px;height:34px;border-radius:50%;background:var(--bg);border:3px solid var(--ac);display:grid;place-items:center;font-size:1.05rem}
+.node.done .dot{background:var(--ac)}
+.node h3{font-size:1.15rem;margin-bottom:2px}
+.node .bar{height:8px;margin-top:8px}
+.back{background:none;border:0;color:var(--ac);font-weight:700;padding:6px 0}
+.tabs{display:flex;gap:8px;margin:12px 0}
+.tab{flex:1;padding:10px;border-radius:14px;border:2px solid var(--bd);background:var(--card);font-weight:700}
+.tab.on{border-color:var(--ac);background:var(--glow)}
+details{background:var(--card);border:1px solid var(--bd);border-radius:16px;margin-bottom:10px;padding:2px 14px}
+summary{cursor:pointer;padding:12px 0;font-weight:700;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"＋";float:right;color:var(--ac)}
+details[open] summary:after{content:"－"}
+details p{margin:0 0 12px;color:var(--tx)}
+details b{color:var(--ac)}
+.q{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:16px}
+.q h2{font-size:1.1rem;margin-bottom:12px;font-family:Nunito,sans-serif;font-weight:700}
+.opt{display:block;width:100%;text-align:left;margin-bottom:8px;padding:12px 14px;border-radius:14px;border:2px solid var(--bd);background:var(--bg)}
+.opt:hover:not([disabled]){border-color:var(--ac)}
+.opt.ok{border-color:var(--ok);background:var(--glow)}
+.opt.bad{border-color:var(--bad)}
+.exp{margin-top:10px;padding:12px;border-radius:14px;background:var(--glow)}
+.opt.sel{border-color:var(--ac);background:var(--glow)}
+.row{display:flex;justify-content:space-between;gap:10px;margin:10px 0 4px;font-weight:700}
+.go{display:block;margin:14px 0 0 auto;background:var(--ac);color:#06241d;border:0;border-radius:14px;padding:11px 22px;font-weight:800}
+.end{text-align:center;padding:26px 16px}
+.end .big{font-size:3rem}
+.pop{animation:pop .35s}
+@keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.pop{animation:none}.bar i{transition:none}}
+</style></head>
+<body><div class="wrap" id="app"></div>
+<script>
+const D=[
+{id:"dh",n:"Direitos Humanos e Legislação",e:"⚖️",
+c:[["🧬 Características dos DH","<b>Universais</b>, <b>imprescritíveis</b>, <b>irrenunciáveis</b>, <b>indivisíveis</b>, <b>interdependentes</b> e <b>históricos</b>. Macete: o titular não pode abrir mão deles."],
+["🌱 Gerações","<b>1ª:</b> liberdades (civis e políticas). <b>2ª:</b> sociais e econômicas (saúde, educação). <b>3ª:</b> fraternidade (meio ambiente, paz)."],
+["📜 Tratados (CF art. 5º, §3º)","Aprovados em cada Casa, <b>2 turnos, 3/5</b> dos votos = equivalem a emenda constitucional. Sem esse rito: <b>supralegais</b> (STF)."],
+["🚫 Abuso de Autoridade (13.869/19)","Exige <b>finalidade específica</b>. Ação penal <b>pública incondicionada</b>. Divergência de interpretação da lei <b>não</b> é crime."],
+["🔒 Tortura (9.455/97)","Crime <b>comum</b> (qualquer pessoa). Reclusão de 2 a 8 anos. Inafiançável, sem graça ou anistia. Condenação: <b>perda do cargo</b> e interdição pelo dobro da pena."],
+["🛡️ Maria da Penha (11.340/06)","Violências: <b>física, psicológica, sexual, patrimonial, moral</b>. Medidas protetivas <b>independem de BO</b> ou ação e valem enquanto houver risco."],
+["🧒 ECA","Criança: até 12 anos incompletos → <b>medidas de proteção</b> e Conselho Tutelar. Adolescente: 12 a 18 → socioeducativas. Apreensão só em <b>flagrante</b> ou ordem judicial escrita."],
+["👵 Pessoa Idosa e Racismo","Idoso: <b>60+</b>; prioridade especial aos <b>80+</b>. Racismo (7.716/89): <b>inafiançável e imprescritível</b>; injúria racial foi equiparada (art. 2º-A)."],["🏛️ Estatuto dos PMs de PE (6.783/74)","<b>Hierarquia</b> = ordenação da autoridade em níveis; <b>disciplina</b> = acatamento às normas. <b>Agregação:</b> o militar fica sem número na escala (ex.: mais de 1 ano de licença para tratamento de saúde). Manifestações coletivas reivindicatórias não são permitidas."],["💊 Lei de Drogas (11.343/06)","<b>Usuário (art. 28):</b> advertência, serviços à comunidade e curso, sem prisão. <b>Tráfico (art. 33):</b> 5 a 15 anos. <b>Privilegiado (§4º):</b> pena reduzida de 1/6 a 2/3 e <b>não é hediondo</b> (STF)."],["⛓️ Crimes Hediondos (8.072/90)","Entram: homicídio qualificado, latrocínio, extorsão mediante sequestro, estupro e genocídio. Hediondos e equiparados (tráfico, tortura, terrorismo): <b>inafiançáveis</b>, sem graça ou anistia."],["🧒 ECA: conceitos e apreensão","<b>Criança:</b> até 12 anos incompletos. <b>Adolescente:</b> 12 a 18. Apreensão só em <b>flagrante</b> ou por ordem judicial escrita. Deve-se comunicar <b>de imediato</b> o juiz e a família. Nunca em cela com adultos. Ato infracional de criança: <b>Conselho Tutelar</b>."],["🧒 ECA: medidas socioeducativas","Art. 112: <b>advertência, reparação do dano, prestação de serviços, liberdade assistida, semiliberdade e internação</b>. Internação: breve, excepcional, <b>máximo de 3 anos</b>."],["🛡️ Maria da Penha: medidas e crime","Protetivas ao agressor: afastamento do lar, proibição de aproximação e contato. <b>Descumprir</b> é crime (art. 24-A, 3 meses a 2 anos). Em município sem delegado disponível, o <b>policial</b> pode afastar o agressor e o juiz é avisado em 24h."],["👵 Pessoa Idosa: crimes","Ação penal <b>pública incondicionada</b>. Para crimes com pena máxima de até 4 anos aplica-se o <b>procedimento da Lei 9.099</b>. Idoso: 60+, prioridade especial aos 80+."],["🌳 Crimes Ambientais (9.605/98)","<b>Pessoa jurídica</b> pode responder penalmente (multa, restrição de direitos, serviços). Maus-tratos a animais: 3 meses a 1 ano; se <b>cão ou gato</b>: reclusão de 2 a 5 anos, multa e proibição de guarda."],["🌍 DUDH (1948)","Art. 1º: todos nascem livres e iguais em dignidade. Art. 5º: <b>nada de tortura</b>. Art. 9º: nada de prisão arbitrária. Art. 11: <b>presunção de inocência</b>. Asilo: não vale para perseguição por <b>crimes comuns</b>."],["🧑 Juventude e San José","<b>Jovem:</b> 15 a 29 anos (Lei 12.852/13). <b>San José (Dec. 678/92):</b> proíbe tortura e escravidão; prisão por dívida só de alimentos; quem aboliu a pena de morte <b>não pode restabelecê-la</b>."],["✊ Racismo a fundo (7.716/89)","Pune discriminação por <b>raça, cor, etnia, religião ou procedência nacional</b>. Ação penal <b>pública incondicionada</b>. <b>Inafiançável e imprescritível</b> (CF). <b>Injúria racial</b> (art. 2º-A): reclusão de 2 a 5 anos e multa."]],
+q:[["Sobre as características dos direitos humanos, assinale a INCORRETA.",["São universais.","São imprescritíveis.","São indivisíveis e interdependentes.","São renunciáveis, podendo o titular abrir mão deles em caráter permanente.","Possuem historicidade."],3,"Os DH são <b>irrenunciáveis</b>."],
+["Os direitos de terceira geração estão ligados",["às liberdades civis e políticas.","à fraternidade e solidariedade, como meio ambiente equilibrado e paz.","aos direitos sociais e econômicos.","exclusivamente à bioética.","exclusivamente à informação e ao pluralismo."],1,"1ª = liberdades; 2ª = sociais; <b>3ª = fraternidade</b>."],
+["Segundo a CF/88, tratados de direitos humanos equivalem a emendas constitucionais quando",["aprovados por maioria simples em turno único.","tiverem qualquer quórum.","aprovados só por 2/3 do Senado.","aprovados por maioria absoluta de uma Casa.","aprovados em cada Casa, em dois turnos, por três quintos."],4,"Art. 5º, §3º: <b>2 turnos + 3/5</b> em cada Casa."],
+["No Pacto de San José, quanto à prisão por dívidas:",["Só é admitida por inadimplemento de obrigação alimentar, por ordem judicial.","É proibida em qualquer hipótese.","Cabe contra o depositário infiel.","Cabe em dívidas bancárias.","Pode ser ordenada por autoridade administrativa."],0,"Só a dívida de <b>alimentos</b>. Depositário infiel: Súmula Vinculante 25."],
+["Sobre a Lei de Abuso de Autoridade, é correto afirmar:",["Basta dolo genérico.","A ação penal é exclusivamente privada.","Exige finalidade específica: prejudicar outrem, beneficiar a si ou a terceiro, ou capricho/satisfação pessoal.","Divergência de interpretação é abuso se houver prejuízo.","Militares estão excluídos."],2,"Precisa do <b>especial fim de agir</b>."],
+["Sobre a Lei de Tortura, assinale a INCORRETA.",["A pena base é de reclusão de 2 a 8 anos.","A condenação gera perda do cargo e interdição pelo dobro da pena.","É inafiançável e insuscetível de graça ou anistia.","Só pode ser praticada por agente público.","Aplica-se a fato cometido no exterior se a vítima for brasileira."],3,"Tortura é crime <b>comum</b>."],
+["NÃO é forma de violência doméstica prevista na Lei Maria da Penha:",["Física","Psicológica","Institucional","Patrimonial","Moral"],2,"Previstas: física, psicológica, sexual, patrimonial e moral."],
+["Um menino de 11 anos é apreendido furtando. O correto é:",["Lavrar auto de apreensão e internar.","Encaminhar ao Conselho Tutelar: criança recebe medidas de proteção.","Aplicar liberdade assistida.","Liberar sem providência.","Levar ao juizado para internação."],1,"Ato infracional de <b>criança</b> = medidas de proteção."],
+["Sobre o Estatuto da Pessoa Idosa:",["Idoso é quem tem 65 anos ou mais.","Idoso tem 60+; prioridade especial aos maiores de 80.","Prioridade especial aos maiores de 75.","Idoso é quem tem 70 anos ou mais.","Prioridade especial só a aposentados."],1,"<b>60+</b>, e prioridade especial aos <b>80+</b>."],
+["Sobre o racismo e a Lei 7.716/89:",["Injúria racial é afiançável e prescreve em 8 anos.","A injúria racial foi equiparada ao racismo: inafiançável e imprescritível.","Racismo é crime prescritível.","Só agentes públicos cometem racismo.","Racismo é contravenção."],1,"Lei 14.532/23 equiparou a injúria racial ao racismo."],
+["Sem o rito do art. 5º, §3º, os tratados de direitos humanos têm, segundo o STF, status",["supralegal","constitucional","de lei ordinária","de lei complementar","de decreto"],0,"Abaixo da CF e <b>acima das leis</b> (RE 466.343).",1],
+["Se o MP não oferecer denúncia por abuso de autoridade no prazo legal, cabe",["ação penal privada subsidiária da pública","ação privada exclusiva","representação da vítima","requisição do Ministro da Justiça","nada"],0,"A ação é pública incondicionada, mas admite a <b>queixa subsidiária</b>.",1],
+["Cuidadora submete idoso a intenso sofrimento físico como castigo pessoal. Configura",["tortura-castigo","tortura-prova","tortura-discriminação","apenas vias de fato","apenas maus-tratos leves"],0,"Art. 1º, II da Lei 9.455: sofrimento intenso como <b>castigo pessoal</b>.",1],
+["O tráfico privilegiado (art. 33, §4º), segundo o STF, é",["crime não equiparado a hediondo","hediondo","inafiançável e imprescritível","sempre sem redução de pena","contravenção"],0,"A pena cai de 1/6 a 2/3 e ele <b>não é hediondo</b>.",1],
+["O ECA considera criança a pessoa com até",["12 anos incompletos","12 anos completos","14 anos","10 anos","18 anos"],0,"Adolescente: de 12 a 18 anos."],
+["NÃO é medida socioeducativa prevista no ECA:",["Prisão preventiva","Advertência","Liberdade assistida","Semiliberdade","Internação"],0,"Art. 112 não inclui prisão preventiva."],
+["A internação do adolescente não pode exceder",["3 anos","5 anos","1 ano","8 anos","30 anos"],0,"Prazo máximo: <b>3 anos</b>.",1],
+["Ao apreender um adolescente por ato infracional, a autoridade deve",["comunicar de imediato o juiz e a família ou pessoa indicada","aguardar 24 horas","mantê-lo em cela com adultos","algemá-lo sempre","avisar só o Conselho Tutelar"],0,"ECA, art. 107."],
+["Descumprir medida protetiva de urgência da Lei Maria da Penha",["é crime, com pena de 3 meses a 2 anos","é só infração administrativa","não gera sanção","é contravenção","é crime de ação privada"],0,"Art. 24-A da Lei 11.340."],
+["Em município sem delegado disponível, o afastamento imediato do agressor do lar pode ser determinado por",["policial, com comunicação ao juiz em 24 horas","somente o juiz","somente o delegado","o Conselho Tutelar","o prefeito"],0,"Lei 13.827/19 (art. 12-C).",1],
+["Os crimes do Estatuto da Pessoa Idosa são de ação penal",["pública incondicionada","privada","pública condicionada à representação","condicionada à requisição","apenas subsidiária"],0,"Art. 95 do Estatuto."],
+["Aos crimes do Estatuto da Pessoa Idosa com pena máxima de até 4 anos aplica-se o procedimento",["da Lei 9.099/95","do júri","do inquérito policial militar","do ECA","não há procedimento especial"],0,"Art. 94: procedimento dos Juizados Especiais.",1],
+["Segundo a Lei 9.605/98, a pessoa jurídica",["pode ser responsabilizada penalmente","nunca responde penalmente","só responde civilmente","só responde se não houver pessoa física","é isenta se for pública"],0,"Admite-se a responsabilidade penal da <b>pessoa jurídica</b>."],
+["Os maus-tratos contra cão ou gato têm pena de",["reclusão de 2 a 5 anos, multa e proibição de guarda","detenção de 3 meses a 1 ano","só multa","só prestação de serviços","detenção de 6 meses"],0,"Lei 14.064/20 elevou a pena para cães e gatos.",1],
+["Segundo a DUDH, o direito de asilo",["não vale para perseguição por crimes de direito comum","vale também para crimes comuns","é negado a todos","depende do Conselho de Segurança","é só para militares"],0,"Art. XIV: não alcança a perseguição <b>legitimamente motivada por crimes comuns</b>.",1],
+["Segundo a DUDH, o acusado de ato delituoso é presumido",["inocente até provada a culpa em julgamento público","culpado até provar o contrário","suspeito até a segunda instância","responsável solidário","inocente só se tiver advogado"],0,"Art. XI: presunção de inocência."],
+["Para o Estatuto da Juventude, jovem é quem tem entre",["15 e 29 anos","12 e 18 anos","18 e 35 anos","14 e 24 anos","16 e 30 anos"],0,"Lei 12.852/13: <b>15 a 29</b>."],
+["Pelo Pacto de San José, os Estados que aboliram a pena de morte",["não podem restabelecê-la","podem restabelecê-la livremente","podem aplicá-la em tempo de paz","devem aplicá-la a menores","podem aplicá-la por delitos políticos"],0,"Art. 4.3 da Convenção."],
+["O crime de racismo é",["inafiançável e imprescritível","afiançável e prescritível","contravenção penal","prescritível em 20 anos","de ação privada"],0,"CF, art. 5º, XLII."],
+["A injúria racial (art. 2º-A da Lei 7.716) tem pena de",["reclusão de 2 a 5 anos e multa","detenção de 1 a 6 meses","só multa","reclusão de 6 a 8 anos","detenção de 2 a 4 anos"],0,"Lei 14.532/23.",1],
+["A Lei 7.716/89 pune a discriminação por",["raça, cor, etnia, religião ou procedência nacional","apenas cor","apenas religião","orientação política","classe social"],0,"Rol do art. 1º."],
+["A ação penal nos crimes da Lei 7.716/89 é",["pública incondicionada","privada","pública condicionada à representação","apenas subsidiária","dependente de requisição"],0,"Segue a regra geral: <b>pública incondicionada</b>."]]},
+{id:"hp",n:"História de Pernambuco",e:"🏰",
+c:[["⚓ Duarte Coelho e Olinda","Donatário da <b>Capitania de Pernambuco</b> (1534) e fundador de Olinda. O açúcar foi a base da economia."],
+["🌷 Holandeses","Invadem pelos interesses da <b>Companhia das Índias Ocidentais</b>. Governo de <b>Maurício de Nassau</b> (1637–44). Expulsos em <b>1654</b> (Insurreição Pernambucana)."],
+["🔥 Revoltas","<b>Mascates (1710):</b> Olinda (açucareira) x Recife (comerciantes lusos). <b>1817:</b> república, Domingos José Martins. <b>Confederação do Equador (1824):</b> contra Pedro I, Frei Caneca. <b>Praieira (1848)</b>."],
+["💃 Cultura","<b>Frevo</b>, <b>Maracatu Nação</b>, Cavalo-Marinho e a Feira de Caruaru são patrimônios imateriais registrados pelo IPHAN."],["🏘️ Recife e Olinda","<b>Olinda:</b> elite açucareira e sede da capitania. <b>Recife:</b> porto e comércio, ganhou força com Nassau e foi elevada a <b>vila em 1709</b>."]],
+q:[["Fidalgo português ligado à formação de Olinda, chegou em 1534:",["Tomé de Souza","Duarte Coelho","Maurício de Nassau","Matias de Albuquerque","Tristão de Mendonça"],1,"<b>Duarte Coelho</b>, donatário de Pernambuco."],
+["A invasão holandesa no Nordeste ligou-se aos interesses da",["Cia. das Índias Orientais","Cia. das Índias Ocidentais","Cia. das Índias Meridionais","Cia. das Índias Continentais","Cia. das Índias Americanas"],1,"<b>WIC</b>: Companhia das Índias Ocidentais."],
+["Participou da Revolução de 1817 e da Confederação do Equador:",["Frei Caneca","Maurício de Nassau","Duarte Coelho","Tomé de Souza","Dantas Barreto"],0,"<b>Frei Caneca</b>."],
+["A Guerra dos Mascates opôs",["holandeses e portugueses","Olinda (elite açucareira) e Recife (comerciantes portugueses)","liberais e conservadores no Império","índios e colonos","republicanos e monarquistas em 1930"],1,"Conflito de <b>1710</b> entre Olinda e Recife."],
+["A Revolução Pernambucana de 1817 tinha como objetivo principal",["a volta de Pedro I ao trono","a instauração de uma república em Pernambuco","a expulsão dos holandeses","o fim imediato da escravidão","a transferência da capital para Olinda"],1,"Foi um movimento <b>republicano</b>, contra impostos altos e a corte no Brasil."],
+["A Confederação do Equador (1824) foi um movimento",["republicano e contrário ao absolutismo de Pedro I","monárquico, pela volta de Pedro I","ocorrido no período regencial","contrário à elevação de Recife","da Primeira República"],0,"Ocorreu no <b>Primeiro Reinado</b>, com Frei Caneca, e era republicano."],
+["Maurício de Nassau, no Brasil Holandês, ficou conhecido por",["fundar Olinda","modernizar o Recife com pontes, obras e urbanização","expulsar os portugueses de Salvador","liderar a Praieira","assinar a Lei Áurea"],1,"Governou de 1637 a 1644 e transformou o <b>Recife</b>."],
+["Assinale a alternativa que NÃO corresponde a aspecto geral dos quilombos coloniais.",["Foram formados principalmente para realizar ritos religiosos.","Eram lugares de proteção contra abusos de senhores.","Eram espaços de resistência cultural.","Havia uma hierarquia social.","Abrigavam, em menor número, outros grupos além de africanos escravizados."],0,"Nasceram como <b>resistência à escravidão</b>, não só para ritos."],
+["Em 1848, liberais contrários ao domínio conservador se levantaram em Pernambuco na",["Revolução Praieira","Guerra dos Mascates","Confederação do Equador","Insurreição Pernambucana","Guerra dos Cabanos"],0,"A <b>Praieira</b> (1848–49) veio dos liberais do Partido da Praia."],
+["A Insurreição Pernambucana terminou, em 1654, com",["a expulsão dos holandeses do Nordeste","a independência do Brasil","a Lei Áurea","a fundação de Recife","a vinda da corte portuguesa"],0,"Após as batalhas dos <b>Guararapes</b>, os holandeses se renderam em 1654."],
+["A Guerra dos Cabanos (1832–1835)",["pedia a volta de Pedro I e ocorreu no período regencial","foi republicana e separatista","ocorreu no Primeiro Reinado","expulsou os holandeses","teve Antônio Conselheiro como líder"],0,"Antônio Conselheiro foi de <b>Canudos</b> (BA), não da Cabanada.",1],
+["O conflito de 1710 surgiu porque",["Olinda perdia a primazia para a vila de Recife, dos comerciantes portugueses","Recife exigiu independência do Brasil","os holandeses voltaram","os escravizados se rebelaram","Nassau foi deposto"],0,"Recife virou vila em <b>1709</b>, e a elite de Olinda reagiu.",1],
+["A Revolução de 1817 liga-se ao contexto da",["vinda da família real e do aumento de impostos","regência de Feijó","expulsão dos holandeses","abolição da escravidão","Proclamação da República"],0,"A corte no Rio elevou tributos que pesavam no Nordeste.",1],
+["Na Primeira República pernambucana (1904–1911), destacou-se o poder político de",["Francisco de Assis Rosa e Silva","Miguel Arraes","Getúlio Vargas","a família Campos, por mais de 40 anos","Maurício de Nassau"],0,"<b>Rosa e Silva</b>, senador e ex-vice-presidente da República.",1]]},
+{id:"pt",n:"Língua Portuguesa",e:"✍️",
+c:[["🔗 Conectivos","<b>Mas, porém, contudo</b> = oposição. <b>Embora</b> = concessão. <b>Para que</b> = finalidade. <b>Porque</b> = causa. <b>Portanto</b> = conclusão."],
+["🎯 Crase","Crase = <b>a</b> (preposição) + <b>a(s)</b> (artigo). Teste: troque por \"ao\". Se der \"ao\", tem crase. Antes de verbo ou de pronome pessoal, não tem."],
+["🧩 Concordância","<b>Fazer</b> indicando tempo e <b>haver</b> no sentido de existir são <b>impessoais</b>: ficam no singular."],["🧭 Colocação pronominal","<b>Próclise</b> com palavra atrativa (não, que, advérbio): 'Não se esqueça'. <b>Ênclise</b> nunca no início da frase nem após particípio. <b>Mesóclise</b>: futuro sem atrativo ('Dar-lhe-ei')."]],
+q:[["Em qual frase há crase obrigatória?",["Vou à escola.","Vou a pé.","Refiro-me a ela.","Começou a chover.","Entregou a todos."],0,"Vou <b>a + a</b> escola. Teste: \"vou ao colégio\"."],
+["Assinale a frase correta quanto à concordância:",["Fazem dois anos que me preparo.","Faz dois anos que me preparo.","Haviam muitos candidatos.","Devem haver vagas.","Houveram problemas."],1,"<b>Fazer</b> (tempo) é impessoal: singular."],
+["\"Estudou muito, porém não passou.\" A relação é de",["causa","finalidade","oposição","conclusão","tempo"],2,"<b>Porém</b> = oposição."],
+["Em 'estudá-la', o acento agudo ocorre porque",["é verbo oxítono terminado em a, seguido de pronome","é monossílabo tônico","é paroxítona terminada em a","é proparoxítona","há hiato"],0,"Estudar perde o R: <b>estudá</b> (oxítona em A) + la."],
+["Assinale a frase com pontuação correta:",["O policial, chegou cedo.","O policial chegou, cedo.","Cedo, o policial chegou ao quartel.","O policial, que chegou cedo foi elogiado.","O policial chegou ao quartel, e foi elogiado, cedo."],2,"Adjunto adverbial deslocado vai <b>isolado por vírgula</b>."],
+["Assinale a frase correta quanto à concordância nominal:",["Seguem anexo os documentos.","Seguem anexos os documentos.","Seguem em anexos os documentos.","Segue anexas os documentos.","Seguem anexa os documentos."],1,"<b>Anexo</b> é adjetivo e concorda com o substantivo. 'Em anexo' é invariável."],
+["Em 'Espero que passe', o 'que' é",["conjunção integrante","pronome relativo","advérbio","preposição","conjunção comparativa"],0,"Troque por 'isso': espero <b>isso</b>. Então é integrante."],
+["Assinale a frase correta quanto à regência verbal:",["Aspiro ao cargo de soldado.","Aspiro o cargo de soldado.","Prefiro estudar do que dormir.","Assisti o filme ontem.","Obedeço as ordens."],0,"<b>Aspirar</b> (almejar) pede <b>a</b>. Prefere-se uma coisa <b>a</b> outra, e obedece-se <b>às</b> ordens."],
+["'Seus olhos são duas estrelas' é exemplo de",["metáfora","metonímia","hipérbole","ironia","pleonasmo"],0,"Comparação implícita, sem 'como': <b>metáfora</b>."],
+["Assinale a palavra escrita corretamente:",["exceção","excessão","exeção","esceção","ecseção"],0,"<b>Exceção</b> (de exceto). Já 'excesso' leva SS."],
+["Em 'Os candidatos, que estudaram, passaram.', a oração entre vírgulas é",["adjetiva explicativa","adjetiva restritiva","substantiva subjetiva","adverbial causal","coordenada sindética"],0,"Com vírgulas, vale para <b>todos</b> os candidatos: explicativa.",1],
+["Assinale a frase correta:",["Ele é apto ao cargo.","Ele é apto no cargo.","Ele é apto do cargo.","Ele é apto sobre o cargo.","Ele é apto com o cargo."],0,"<b>Apto</b> pede a ou para.",1],
+["Em qual frase o acento grave é obrigatório?",["Referiu-se à moça que chegou.","Fui a Brasília.","Entreguei o documento a Vossa Senhoria.","Chegou a casa cedo.","Falou a quem pediu."],0,"Referir-se <b>a</b> + <b>a</b> moça. Antes de cidade sem artigo, pronome de tratamento e 'quem', não há crase.",1],
+["Assinale a concordância correta:",["Mais de um candidato desistiu.","Fazem cinco anos que estudo.","Haviam muitas vagas abertas.","Os Estados Unidos é um país grande.","Houveram muitos recursos."],0,"Fazer (tempo) e haver (existir) são impessoais. Com 'Os Estados Unidos', o verbo vai ao plural.",1]]},
+{id:"rl",n:"Raciocínio Lógico",e:"🧠",
+c:[["🔁 Negações","Negação de <b>\"todo A é B\"</b> = <b>\"algum A não é B\"</b>. Negação de \"nenhum\" = \"algum\"."],
+["↔️ Condicional","<b>Se p então q</b> equivale a <b>se não q então não p</b>. Rua molhada não prova chuva, mas rua seca prova que não choveu."],
+["🎲 Contagem","Combinação (ordem não importa): C(n,k) = n! / (k!(n−k)!). Probabilidade = casos favoráveis ÷ casos possíveis."],["🧮 Tabela-verdade","<b>p→q</b> só é falsa com p verdadeira e q falsa. <b>E</b> só é verdadeira se ambas forem. <b>Ou</b> só é falsa se ambas forem. A negação de 'p→q' é <b>p e não q</b>."]],
+q:[["A negação de \"Todo policial é corajoso\" é",["Nenhum policial é corajoso.","Algum policial não é corajoso.","Todo policial é covarde.","Algum policial é corajoso.","Nem todo corajoso é policial."],1,"Negação de <b>todo</b> = <b>algum não</b>."],
+["Se chove, a rua molha. A rua NÃO molhou. Conclui-se que",["choveu","não choveu","pode ter chovido","a rua é impermeável","nada se conclui"],1,"Contrapositiva: <b>¬q → ¬p</b>."],
+["De quantas formas se escolhem 2 policiais entre 5?",["5","8","10","20","25"],2,"C(5,2) = <b>10</b>."],
+["Numa urna há 4 bolas azuis e 6 vermelhas. A probabilidade de sortear uma azul é",["40%","60%","4%","25%","10%"],0,"4 favoráveis ÷ 10 possíveis = <b>40%</b>."],
+["'Se estudo, passo' é equivalente a",["Se não passo, não estudo.","Se passo, estudo.","Estudo e passo.","Não estudo ou não passo.","Estudo ou passo."],0,"A contrapositiva <b>¬q → ¬p</b> é equivalente."],
+["Quantas duplas diferentes se formam com 6 soldados?",["12","15","30","36","6"],1,"C(6,2) = 6·5 ÷ 2 = <b>15</b>."],
+["A negação de 'Algum soldado faltou' é",["Nenhum soldado faltou.","Algum soldado não faltou.","Todo soldado faltou.","Algum soldado compareceu.","Todo soldado compareceu e faltou."],0,"Negação de <b>algum</b> = <b>nenhum</b>."],
+["Em 30 policiais, 18 gostam de correr, 15 de nadar e 5 de ambos. Quantos gostam de correr ou nadar?",["28","33","23","30","13"],0,"18 + 15 − 5 = <b>28</b> (tira-se a interseção contada duas vezes)."],
+["Todo soldado é disciplinado. Carlos é soldado. Logo,",["Carlos é disciplinado.","Carlos não é disciplinado.","Todo disciplinado é soldado.","Carlos pode ser ou não disciplinado.","Nenhum soldado é Carlos."],0,"Silogismo válido: <b>Carlos ∈ soldados ⊂ disciplinados</b>."],
+["De quantas formas 3 policiais formam uma fila?",["6","3","9","12","27"],0,"Permutação: 3! = <b>6</b>."],
+["A proposição 'Se p então q' é falsa quando",["p é verdadeira e q é falsa","p é falsa e q é verdadeira","ambas são falsas","ambas são verdadeiras","p é falsa"],0,"É o único caso falso: <b>V → F</b>.",1],
+["Lançando dois dados honestos, a probabilidade de a soma ser 7 é",["1/6","1/12","7/36","1/9","5/36"],0,"6 casos em 36 = <b>1/6</b>.",1],
+["Com 5 soldados e 4 cabos, quantas comissões de 3 pessoas têm exatamente 2 soldados e 1 cabo?",["40","60","36","20","90"],0,"C(5,2) × C(4,1) = 10 × 4 = <b>40</b>.",1],
+["A negação de 'Se chove, então a rua molha' é",["Chove e a rua não molha.","Não chove e a rua molha.","Se não chove, a rua não molha.","Chove ou a rua molha.","Se a rua molha, chove."],0,"Nega-se p→q com <b>p e não q</b>.",1]]},
+{id:"in",n:"Informática",e:"💻",
+c:[["🎣 Segurança","<b>Phishing:</b> golpe que imita sites ou e-mails reais para roubar dados. <b>2FA:</b> segunda camada de autenticação. <b>Malware:</b> vírus, worm, ransomware."],
+["💾 Backup","<b>Completo:</b> tudo. <b>Incremental:</b> só o que mudou desde o último backup (qualquer tipo). <b>Diferencial:</b> o que mudou desde o último completo."],
+["🪟 Windows 11 e Excel","<b>Win+E</b> abre o Explorador. <b>Ctrl+Shift+Esc</b> abre o Gerenciador de Tarefas. No Excel, <b>=SOMA(A1:A3)</b> soma o intervalo."],["🌐 E-mail e redes","<b>SMTP</b> envia e-mail; <b>POP3</b> e <b>IMAP</b> recebem. <b>DDoS</b> derruba um serviço com excesso de acessos. <b>Firewall</b> filtra tráfego, mas não substitui o antivírus."]],
+q:[["Golpe que imita um site de banco para roubar senhas:",["Phishing","Firewall","Backup","Proxy","Cookie"],0,"É o <b>phishing</b>."],
+["O backup incremental copia",["todos os arquivos sempre.","só os alterados desde o último backup.","só os alterados desde o último completo.","apenas pastas ocultas.","nada, só verifica."],1,"Incremental = alterados desde o <b>último backup</b>."],
+["Se A1=1, A2=2 e A3=3, o resultado de =SOMA(A1:A3) é",["3","5","6","12","123"],2,"1+2+3 = <b>6</b>."],
+["Uma intranet é",["uma rede privada de uma organização que usa tecnologias da internet","a rede pública mundial","uma rede que funciona só por satélite","uma rede sem protocolo TCP/IP","um serviço apenas de e-mail"],0,"Intranet = <b>rede interna</b> com tecnologia de internet."],
+["O ransomware é um malware que",["sequestra dados por criptografia e exige resgate","exibe propaganda indesejada","só registra teclas digitadas","protege contra vírus","é um tipo de backup"],0,"<b>Ransom</b> = resgate."],
+["Qual atalho abre o Gerenciador de Tarefas no Windows 11?",["Ctrl+Shift+Esc","Win+E","Alt+F4","Ctrl+Alt+C","Win+D"],0,"Win+E é o Explorador e Win+D mostra a área de trabalho."],
+["Se A1=2, A2=4 e A3=6, =MÉDIA(A1:A3) resulta em",["4","6","12","2","3"],0,"(2+4+6) ÷ 3 = <b>4</b>."],
+["Qual destes é um dispositivo de ENTRADA?",["Teclado","Monitor","Impressora","Caixa de som","Projetor"],0,"Teclado e mouse <b>enviam</b> dados ao computador."],
+["No Word, para salvar o documento com outro nome, usa-se",["Salvar como","Imprimir","Ortografia","Colar especial","Fechar"],0,"<b>Salvar como</b> cria uma cópia com novo nome ou local."],
+["O principal objetivo da criptografia é",["tornar os dados ilegíveis a quem não tem a chave","acelerar a internet","apagar vírus","fazer backup","bloquear anúncios"],0,"Garante a <b>confidencialidade</b>."],
+["Com backup completo no domingo e diferenciais nas noites seguintes, para restaurar o estado de quarta à noite são necessários",["o completo de domingo e o diferencial de quarta","o completo e todos os diferenciais","apenas o diferencial de quarta","o completo e os incrementais","só o completo"],0,"O diferencial acumula tudo desde o último completo.",1],
+["Ataque que sobrecarrega um servidor com acessos para torná-lo indisponível:",["DDoS","Phishing","Spyware","Keylogger","Sniffing"],0,"<b>DDoS</b> = negação de serviço distribuída.",1],
+["Com A1=10, A2=20 e A3=30, =SE(MÉDIA(A1:A3)>15;“Alta”;“Baixa”) resulta em",["Alta","Baixa","20","Erro","VERDADEIRO"],0,"Média 20 > 15, então <b>Alta</b>.",1],
+["Qual protocolo é usado para ENVIAR e-mails?",["SMTP","POP3","IMAP","FTP","HTTP"],0,"POP3 e IMAP <b>recebem</b>.",1]]},
+{id:"dc",n:"Direito Constitucional",e:"🏛️",
+c:[["🧰 Remédios constitucionais","<b>HC:</b> liberdade de locomoção. <b>MS:</b> direito líquido e certo. <b>Mandado de injunção:</b> falta de norma regulamentadora. <b>HD:</b> informações pessoais."],
+["🪖 Militares","<b>Proibidas</b> a sindicalização e a greve. Em serviço ativo, não podem se filiar a partido político."],
+["🚨 Estado de defesa","Decretado pelo Presidente, até <b>30 dias</b>, prorrogável <b>uma vez</b> por igual período. No estado de sítio por comoção grave, o limite também é 30 dias por vez."],["🧭 Nacionalidade e militar candidato","<b>Natos:</b> nascidos no Brasil (salvo pais estrangeiros a serviço de seu país) e filhos de brasileiros a serviço do Brasil. Militar com <b>mais de 10 anos</b> que se candidata é <b>agregado</b> e, se eleito, vai para a inatividade."]],
+q:[["Falta de norma regulamentadora impede um direito de cidadania. Cabe",["mandado de segurança","mandado de injunção","ação popular","habeas data","habeas corpus"],1,"Falta de norma = <b>mandado de injunção</b>."],
+["Quanto ao policial militar, a CF:",["permite sindicalização e greve.","proíbe sindicalização e greve.","permite só a greve.","permite só a sindicalização.","permite ambos com autorização."],1,"<b>Ambas proibidas</b>."],
+["O estado de defesa dura no máximo",["15 dias, prorrogável sempre","30 dias, prorrogável uma vez","60 dias, sem prorrogação","90 dias","30 dias, sem prorrogação"],1,"<b>30 dias</b>, prorrogável <b>uma vez</b>."],
+["Para proteger direito líquido e certo contra ato ilegal, quando não couber HC nem HD, cabe",["mandado de segurança","mandado de injunção","ação popular","habeas data","ADI"],0,"Direito líquido e certo = <b>mandado de segurança</b>."],
+["O habeas data serve para",["conhecer e retificar informações pessoais em bancos de dados públicos","proteger a liberdade de locomoção","anular ato lesivo ao patrimônio público","suprir a falta de norma regulamentadora","garantir direito líquido e certo"],0,"<b>Data</b> = seus dados."],
+["São fundamentos da República (art. 1º) a soberania, a cidadania e",["a dignidade da pessoa humana, os valores sociais do trabalho e da livre iniciativa e o pluralismo político","a separação dos poderes e a federação","erradicar a pobreza","a autodeterminação dos povos","a prevalência dos direitos humanos"],0,"Erradicar a pobreza é <b>objetivo</b> (art. 3º). Os demais são princípios ou outros artigos."],
+["Segundo o art. 2º da CF, os Poderes da União são",["Legislativo, Executivo e Judiciário, independentes e harmônicos","Legislativo, Executivo e Ministério Público","subordinados hierarquicamente ao Executivo","apenas Legislativo e Executivo","independentes, sem necessidade de harmonia"],0,"<b>Independentes e harmônicos</b> entre si."],
+["Os direitos à vida, liberdade, igualdade, segurança e propriedade estão",["no art. 5º, como direitos e garantias fundamentais","entre as normas apenas programáticas","restritos a brasileiros natos","na ordem econômica","entre os direitos políticos"],0,"Art. 5º: valem para brasileiros e <b>estrangeiros residentes</b>."],
+["A CF veda a pena de",["morte, salvo em caso de guerra declarada","prestação alternativa","multa","perda de bens","suspensão de direitos"],0,"A pena de morte só é admitida em <b>guerra declarada</b>."],
+["Sem consentimento do morador, a casa pode ser invadida durante a noite em caso de",["flagrante delito, desastre ou para prestar socorro","ordem judicial","ordem do delegado","denúncia anônima","suspeita genérica"],0,"<b>Ordem judicial</b> só vale de dia. Flagrante, desastre e socorro valem a qualquer hora."],
+["É brasileiro nato",["o nascido no exterior, filho de brasileiro a serviço do Brasil","o nascido no exterior, filho de brasileiro que não esteja a serviço do Brasil","o estrangeiro naturalizado após 5 anos","o português residente no Brasil","o apátrida no Brasil"],0,"Sem estar a serviço do Brasil, só com registro ou residência e opção.",1],
+["O mandado de segurança coletivo pode ser impetrado por",["partido com representação no Congresso e organização sindical","qualquer cidadão","qualquer pessoa física","somente o Ministério Público","apenas o Presidente"],0,"Art. 5º, LXX da CF.",1],
+["A ação popular protege",["o patrimônio público, a moralidade administrativa, o meio ambiente e o patrimônio histórico","o direito líquido e certo","a liberdade de locomoção","informações pessoais","a falta de norma"],0,"É proposta por <b>cidadão</b>, isenta de custas, salvo má-fé.",1],
+["O militar alistável é elegível; se contar mais de dez anos de serviço,",["será agregado e, se eleito, passa para a inatividade","deve se afastar definitivamente antes do registro","é inelegível","continua na ativa normalmente","é exonerado"],0,"CF, art. 14, §8º, II.",1]]},
+{id:"rd",n:"Redação (40 pontos)",e:"🧾",
+c:[["📐 Estrutura","<b>Introdução:</b> tema e tese. <b>2 desenvolvimentos:</b> argumento + exemplo ou dado. <b>Conclusão:</b> retoma a tese e fecha com proposta. De <b>15 a 20 linhas</b>."],
+["🎯 Como vale a nota","4 aspectos de 10 pontos: <b>tema e argumentação</b>; <b>coesão e coerência</b>; <b>estrutura</b>; <b>gramática</b> (pontuação, grafia, concordância, regência, colocação pronominal). Mínimo: <b>12 de 40</b>."],
+["🚫 Zera a prova","Fugir do tema, outra tipologia, texto desestruturado, lápis ou tinta de cor errada, letra ilegível e <b>qualquer identificação</b> (nome, sinal, desenho). Fora do limite de linhas perde pontos."],
+["🔗 Conectivos","Adição: <b>além disso</b>. Oposição: <b>contudo</b>. Causa: <b>visto que</b>. Conclusão: <b>portanto</b>. Exemplo: <b>por exemplo</b>."]],
+q:[["A redação de Soldado vale e exige, no mínimo,",["40 pontos e 12 pontos","30 pontos e 9 pontos","100 pontos e 30 pontos","40 pontos e 20 pontos","10 pontos e 5 pontos"],0,"Edital: <b>40 pontos</b>, mínimo <b>12</b>."],
+["O que zera a redação?",["Escrever o nome na folha de versão definitiva","Usar 18 linhas","Usar caneta azul","Dividir bem os parágrafos","Usar conectivos"],0,"Identificação de <b>qualquer natureza</b> elimina."],
+["NÃO é aspecto avaliado na redação:",["Letra cursiva ornamentada","Atendimento ao tema","Coesão e coerência","Estrutura do texto","Modalidade gramatical"],0,"Avalia-se a legibilidade, não o enfeite."]]},
+{id:"dp",n:"Fases, TAF e dia da prova",e:"🧭",
+c:[["🧭 Fases do concurso","1ª: <b>objetiva (60) + redação (40)</b>. Depois: <b>exames médicos</b>, <b>aptidão física</b>, <b>avaliação psicológica</b>, investigação social e Curso de Formação. Faltar a qualquer fase elimina."],
+["🏃 TAF masculino","Barra: <b>5</b> flexões. Salto: <b>3,6 m</b>. Natação 50 m: até <b>1 min</b>. Abdominal remador: <b>40</b> em 1 min. Corrida 2.400 m: até <b>11 min 30 s</b>."],
+["🏃‍♀️ TAF feminino","Barra: <b>25 s</b> em isometria. Salto: <b>2,8 m</b>. Natação: até <b>1 min 10 s</b>. Abdominal: <b>36</b> em 1 min. Corrida: até <b>13 min 30 s</b>. Todos os testes são feitos, e é preciso atingir todos os índices."],
+["🎒 Dia da prova","Chegue <b>45 min</b> antes do fechamento do portão. Leve <b>caneta transparente azul ou preta</b> e documento oficial <b>original com foto</b> (o digital não vale). Saída só após 60 min. Duração: 5 horas."],
+["🧠 Estratégia","Mais de uma marcação, rasura ou lápis valem <b>zero</b>. Desconfie de 'sempre', 'nunca' e 'exclusivamente'. Em 'assinale a INCORRETA', procure a falsa. Cada acerto vale 1 ponto, então não deixe em branco."],
+["📅 Plano semanal","Seg a sex: 1 matéria por dia (cards + quiz) e 15 min de <b>treino de erros</b>. Sábado: simulado. Domingo: 1 redação de 15 a 20 linhas."]],
+q:[["Para fazer a prova, o candidato deve levar documento",["oficial original com foto, filiação e assinatura","digital no celular","cópia autenticada","título de eleitor","carteira de estudante"],0,"Digital, título e carteira de estudante <b>não são aceitos</b>."],
+["Cada questão da objetiva tem 5 alternativas. Se houver mais de uma marcada, a pontuação é",["zero","meio ponto","ponto cheio","anulada para todos","um quinto de ponto"],0,"Dupla marcação, rasura ou lápis = <b>zero</b>."],
+["Para aprovar na objetiva, é preciso",["30% em cada bloco, não zerar nenhuma matéria e 30% no total","50% no total","60% por matéria","18 pontos por matéria","70% no total"],0,"Regra do item 10.1.4 do edital."],
+["No TAF masculino, o tempo máximo na corrida de 2.400 m é",["11 min 30 s","10 min","12 min 30 s","13 min 30 s","9 min"],0,"<b>13 min 30 s</b> é o índice feminino.",1],
+["No TAF masculino, o mínimo na barra fixa é",["5 flexões","10 flexões","3 flexões","8 flexões","12 flexões"],0,"As mulheres fazem <b>25 s</b> em isometria."]]},
+{id:"co",n:"PE Colonial: capitanias e açúcar",e:"🌾",
+c:[["🧭 Antes da colonização","O espanhol <b>Vicente Yáñez Pinzón</b> aportou no cabo de Santo Agostinho em <b>janeiro de 1500</b>, antes de Cabral. O pau-brasil foi <b>arrendado</b> a mercadores (grupo de Fernão de Loronha), sob monopólio da Coroa."],
+["🏰 Donatário","Duarte Coelho tinha justiça civil e criminal, nomeava autoridades e dava <b>sesmarias</b>. A capitania passava por herança, indivisível, mas <b>não era propriedade plena</b>: a Coroa mantinha direitos (quinto dos metais). Caio Prado Jr.: a colonização foi <b>empreendimento mercantil</b>."],
+["👥 Indígenas","Lei de <b>1570</b> (D. Sebastião): proíbe escravizar, salvo <b>guerra justa</b> ou antropófagos. <b>Tapuia</b>: termo tupi para povos não tupis do interior. <b>Cunhadismo</b> (Darcy Ribeiro): incorporar o estrangeiro ao parentesco pelo casamento."],
+["🍬 Açúcar","<b>Dízimo</b>: devido à Ordem de Cristo, cobrado por contratadores. <b>Mestre de açúcar</b>: dá o ponto nas caldeiras. <b>Exclusivo colonial</b>: o açúcar ia a Portugal e era reexportado. <b>1850</b>: o tráfico interprovincial levou escravizados ao Sudeste. <b>Cana-caiana</b> (1810): mais rendimento."]],
+q:[["Antes de Cabral, quem aportou no cabo de Santo Agostinho em janeiro de 1500?",["Vicente Yáñez Pinzón","Américo Vespúcio","Jacob Willekens","Duarte Coelho","Binot de Gonneville"],0,"O espanhol <b>Pinzón</b>."],
+["No início do século XVI, o pau-brasil foi explorado por",["mercadores que arrendaram o monopólio da Coroa","donatários das capitanias","jesuítas","qualquer nação, sem monopólio","funcionários régios, sem particulares"],0,"Modelo de <b>arrendamento</b>."],
+["Sobre o donatário, assinale a INCORRETA:",["Tinha propriedade plena da capitania e podia vendê-la livremente.","Exercia justiça civil e criminal e dava sesmarias.","A capitania passava ao filho mais velho e era indivisível.","A Coroa mantinha direitos, como o quinto dos metais.","Tinha o monopólio das moendas de água."],0,"Havia <b>limites</b> da carta: não era propriedade plena."],
+["A lei de 1570, de D. Sebastião, sobre indígenas",["proibiu a escravização, salvo guerra justa ou antropófagos","liberou a escravização geral","extinguiu as capitanias","criou o dízimo","expulsou os jesuítas"],0,"Regra: proibição, com <b>exceções</b>."],
+["O 'cunhadismo', de Darcy Ribeiro, foi",["a incorporação do estrangeiro ao parentesco indígena pelo casamento","um imposto sobre o açúcar","um tipo de engenho","uma milícia","uma lei de terras"],0,"Mecanismo de aproximação entre europeus e indígenas."],
+["O dízimo, no período colonial, era devido",["à Ordem de Cristo, e cobrado por contratadores","só pelos indígenas","aos holandeses","à Câmara do Recife","aos jesuítas"],0,"O rei era grão-mestre da <b>Ordem de Cristo</b>."],
+["A cana-caiana, trazida de Caiena a partir de 1810,",["tinha maior rendimento que a cana crioula","foi proibida","substituiu o café","era só de Alagoas","era menos produtiva"],0,"Inovação agrícola do século XIX."],
+["Após a proibição do tráfico em 1850, no Nordeste açucareiro",["o tráfico interprovincial levou escravizados ao Sudeste cafeeiro","o tráfico aumentou","chegaram mais africanos","os engenhos usaram só trabalho livre","o açúcar parou de ser exportado"],0,"Reduziu a mão de obra dos engenhos."]]},
+{id:"nh",n:"Nova Holanda (1630–1654)",e:"🌷",
+c:[["🌷 Chegada (1630)","A <b>WIC</b> (1621) tomou <b>Olinda em fevereiro de 1630</b>. Raiz: o embargo ao comércio holandês na <b>União Ibérica</b>. A Bahia foi tomada em 1624 e retomada em 1625 (Jornada dos Vassalos)."],
+["🛡️ Resistência","O <b>Arraial do Bom Jesus</b> (Matias de Albuquerque) conteve os holandeses no litoral até <b>1635</b>. <b>Calabar</b> passou aos holandeses em 1632 e deu a eles conhecimento do terreno."],
+["👑 Nassau (1637–44)","Criou <b>Mauritsstad</b> (ilha de Antônio Vaz), com pontes e obras. Trouxe pintores como <b>Frans Post</b> e <b>Albert Eckhout</b>. Tolerância religiosa. Saiu em 1644 e assumiu o <b>Supremo Conselho</b>."],
+["⚔️ Restauração (1645–54)","Insurreição em <b>13/6/1645</b> (João Fernandes Vieira, André Vidal de Negreiros). <b>Tabocas</b> (1645) veio <b>antes</b> dos <b>Guararapes</b> (19/4/1648 e 19/2/1649). Capitulação no <b>Campo do Taborda</b>, <b>janeiro de 1654</b>. <b>19 de abril</b> (Dia do Exército) lembra a 1ª batalha dos Guararapes."]],
+q:[["A WIC tomou Olinda em",["fevereiro de 1630","1624","1637","1645","1654"],0,"A WIC foi criada em 1621."],
+["A invasão holandesa de Pernambuco tem raiz na União Ibérica porque",["o comércio holandês com os portos portugueses foi embargado","Nassau casou com uma portuguesa","o tráfico foi proibido","o ouro foi descoberto","a França invadiu o Recife"],0,"O embargo levou a Holanda ao <b>controle direto do açúcar</b>."],
+["Quem, ao passar para os holandeses em 1632, forneceu a eles conhecimento do terreno?",["Calabar","Matias de Albuquerque","Henrique Dias","Felipe Camarão","Vidal de Negreiros"],0,"<b>Domingos Fernandes Calabar</b>."],
+["Mauritsstad foi",["a cidade que Nassau ergueu na ilha de Antônio Vaz","fundada por Duarte Coelho","o nome do Arraial do Bom Jesus","um engenho de Olinda","o forte de Tabocas"],0,"A <b>Cidade Maurícia</b>."],
+["Frans Post e Albert Eckhout foram",["pintores da comitiva de Nassau","cientistas portugueses","chefes militares","bispos","donatários"],0,"Registraram paisagens e gentes do Nordeste."],
+["Com a saída de Nassau, em 1644, o governo da Nova Holanda passou ao",["Supremo Conselho","Conselho Ultramarino","Santo Ofício","Senado de Olinda","Vice-Rei"],0,"Marca uma <b>inflexão</b> na colônia."],
+["Qual a ordem correta?",["Tabocas (1645), depois Guararapes (1648 e 1649)","Guararapes, depois Tabocas","Capitulação, depois Insurreição","Nassau chegou depois da capitulação","Tabocas em 1654"],0,"A guerra segue essa ordem."],
+["O Dia do Exército (19 de abril) lembra",["a 1ª batalha dos Guararapes","a capitulação do Taborda","a Confederação do Equador","a República","a Revolução de 1817"],0,"A capitulação foi em <b>janeiro de 1654</b>."],
+["A capitulação holandesa no Campo do Taborda ocorreu em",["janeiro de 1654","1648","1630","1645","1710"],0,"Fim do domínio holandês."]]},
+{id:"rv",n:"Mascates, 1817, 1824 e Praieira",e:"🔥",
+c:[["🏛️ Mascates (1710–11)","O Recife virou vila (1709). Olinda, endividada com os comerciantes, perdeu poder. O governador <b>Castro e Caldas</b> foi baleado e fugiu à Bahia; o bispo assumiu. A república 'à moda de Veneza', de Bernardo Vieira de Melo, <b>não foi aprovada</b>. <b>Mazombos</b>: nobres da terra, nascidos na colônia."],
+["🇧🇷 1817","Causas: impostos para manter a Corte no Rio, queda do açúcar e algodão, ideias iluministas. Governo Provisório de <b>5 membros</b> (clero, magistratura, agricultura, comércio, militares), com padre <b>Miguelinho</b>. Durou pouco mais de 2 meses. <b>Domingos José Martins</b> foi executado em Salvador."],
+["⚓ Confederação do Equador (1824)","Pedro I nomeou <b>Pais Barreto</b>; <b>Paes de Andrade</b> recusou e proclamou a Confederação (2/7/1824). <b>Frei Caneca</b> criticou o Poder Moderador no <b>Typhis Pernambucano</b> e foi <b>executado</b>. Cochrane bloqueou o Recife."],
+["🌿 Cabanada e Praieira","<b>Cabanada (1832–35):</b> matas do sul de PE e norte de AL; pobres, indígenas e negros; restauradores queriam a <b>volta de Pedro I</b>. <b>Praieira (1848–50):</b> <b>praieiros</b> (liberais) x <b>guabirus</b> (conservadores); ataque ao Recife repelido em <b>2/2/1849</b>."]],
+q:[["A origem da Guerra dos Mascates está em que",["a nobreza de Olinda, endividada, viu na emancipação do Recife a perda de seu poder","o Recife queria a independência","holandeses queriam restaurar Nassau","lavradores exigiram a vila","o bispo queria mudar de cidade"],0,"Conflito de <b>poder e dívidas</b>."],
+["Sobre a Guerra dos Mascates, assinale a INCORRETA:",["A república 'à moda de Veneza' foi aprovada e durou até 1711.","Mascates e pés-rapados foram ofensas mútuas.","Houve crise do açúcar após os holandeses.","O Recife manteve a condição de vila.","Houve anistia em 1714, de D. João V."],0,"A proposta de Bernardo Vieira de Melo <b>não foi aprovada</b>."],
+["Em 'A Fronda dos Mazombos', mazombos são",["nobres da terra, descendentes de portugueses nascidos na colônia","mestiços de indígenas","cristãos-novos","soldados de Henrique Dias","holandeses convertidos"],0,"Opunham-se aos <b>reinóis</b> do comércio."],
+["A Revolução de 1817 tem como contexto",["impostos para a Corte, queda do açúcar e algodão e ideias iluministas","a volta de Pedro I","o fim do tráfico","a guerra contra os holandeses","a Proclamação da República"],0,"O Brasil já era <b>Reino Unido</b> a Portugal e Algarves."],
+["O Governo Provisório de 1817 teve",["5 membros: clero, magistratura, agricultura, comércio e militares","3 membros","só militares","um imperador","10 senadores"],0,"Padre Miguelinho foi o secretário."],
+["Domingos José Martins foi executado em",["Salvador","Recife","Rio de Janeiro","Olinda","Lisboa"],0,"O governo caiu em maio de 1817."],
+["A Confederação do Equador foi proclamada depois que",["Paes de Andrade recusou entregar o cargo ao nomeado Pais Barreto","Pedro I abdicou","os holandeses voltaram","Frei Caneca assumiu a presidência","o Recife foi tomado"],0,"Proclamada em <b>2/7/1824</b>."],
+["Sobre Frei Caneca, assinale a INCORRETA:",["Foi poupado por Pedro I e se exilou na Inglaterra.","Criticou o Poder Moderador no Typhis Pernambucano.","Foi condenado à morte.","Participou de 1817 e de 1824.","Era frade carmelita."],0,"Foi <b>executado</b>."],
+["Os cabanos (1832–35) defendiam",["a volta de D. Pedro I, a religião e a monarquia","a república federalista","a abolição imediata","a independência de Alagoas","o fim da Regência por voto liberal"],0,"Eram <b>restauradores</b> (caramurus)."],
+["Na Praieira (1848–50), os praieiros eram",["liberais, opostos aos conservadores guabirus","conservadores","monarquistas restauradores","militares holandeses","cabanos"],0,"O nome vem da <b>Rua da Praia</b> (Diário Novo)."],
+["O ataque rebelde ao Recife na Praieira foi repelido em",["2 de fevereiro de 1849","1817","1824","1710","1930"],0,"Morreu Nunes Machado; Pedro Ivo lutou até 1850."]]},
+{id:"rp",n:"República Velha e Era Vargas",e:"🏭",
+c:[["🏛️ Rosa e Silva e as oligarquias","<b>Rosa e Silva</b>: chefe da oligarquia pernambucana na virada XIX–XX e vice de Campos Sales. <b>Política dos Governadores</b>: o presidente respeitava as oligarquias, que o apoiavam no Congresso (a <b>verificação de poderes</b> barrava opositores). <b>Coronelismo</b>: votos em troca de cargos e favores."],
+["⚔️ 1911 e símbolos","A <b>Política das Salvações</b> (Hermes da Fonseca) derrubou o grupo rosista: o general <b>Dantas Barreto</b> venceu a eleição estadual. A <b>bandeira</b> de PE, inspirada em 1817, foi oficializada em <b>1917</b>."],
+["🎭 Cultura e cangaço","<b>1926:</b> Congresso Regionalista do Recife, de <b>Gilberto Freyre</b>. <b>Lampião</b> nasceu em Vila Bela (hoje Serra Talhada), PE, em 1898, e morreu em <b>1938</b>, na Grota de Angicos (SE), com Maria Bonita. As usinas concentraram a moagem no início do século XX."],
+["🪖 1930","<b>26/7/1930:</b> João Pessoa (PB) foi morto na Confeitaria Glória, Recife, por <b>João Dantas</b>. Depois: Estácio Coimbra deposto, Assembleia dissolvida e <b>Lima Cavalcanti</b> interventor (usineiro; eleito em 1935 pela Assembleia). <b>Juarez Távora</b>: 'vice-rei do Norte'. O <b>Código dos Interventores</b> (1931) subordinou-os ao Governo Provisório."],
+["📻 Agamenon e o Estado Novo","<b>Agamenon Magalhães:</b> ministro do Trabalho (1934–37), interventor (1937–45), ministro da Justiça (1945). <b>Liga Social Contra o Mocambo</b> (1939): casas populares. Depois fundou o PSD e foi governador eleito em <b>1950</b> (morreu em 1952). <b>1935:</b> levante da ANL no Recife (Gregório Bezerra), reprimido em poucos dias. <b>Josué de Castro</b>: a fome é fenômeno <b>social</b>, ligado ao latifúndio."]],
+q:[["Francisco de Assis Rosa e Silva foi",["chefe da oligarquia pernambucana e vice-presidente no governo Campos Sales","líder do movimento de 1911","interventor de Vargas em 1930","chefe das volantes contra Lampião","governador deposto na Revolta da Armada"],0,"Era o chefe do <b>rosismo</b>."],
+["Em 1911, a oligarquia rosista foi derrubada por",["Dantas Barreto, apoiado por Hermes da Fonseca","Estácio Coimbra","Lima Cavalcanti, em golpe militar","Agamenon Magalhães","Gregório Bezerra"],0,"Contexto da <b>Política das Salvações</b>."],
+["Sobre a bandeira de Pernambuco, assinale a INCORRETA:",["Foi criada em 1889 e oficializada no governo Rosa e Silva.","Inspira-se na bandeira de 1817.","Foi oficializada em 1917, no centenário.","Tem arco-íris, sol e estrela no campo azul.","Tem uma cruz vermelha no campo branco."],0,"A oficialização foi em <b>1917</b>."],
+["O Congresso Regionalista de 1926, no Recife, foi idealizado por",["Gilberto Freyre","Joaquim Nabuco","Josué de Castro","Dantas Barreto","Agamenon Magalhães"],0,"Valorizou a cultura e a culinária nordestinas."],
+["Sobre Lampião, assinale a INCORRETA:",["Nasceu na Bahia e foi morto em Serra Talhada.","Nasceu em Vila Bela, hoje Serra Talhada (PE).","Foi morto em 1938 na Grota de Angicos (SE).","Maria Bonita morreu no mesmo ataque.","A volante que o atacou veio de Alagoas."],0,"Nasceu em <b>Pernambuco</b>."],
+["Na Política dos Governadores, de Campos Sales,",["o presidente respeitava as oligarquias, que o apoiavam no Congresso","os governadores eram eleitos pelo Congresso","criou-se a Justiça Eleitoral","os estados do Sul eram sempre intervindos","os coronéis perdiam poder"],0,"A <b>verificação de poderes</b> barrava opositores."],
+["O coronelismo baseava-se em",["compromisso entre o poder público e chefes locais, que garantiam votos em troca de cargos e favores","voto secreto e universal","pequena propriedade familiar","nomeação de coronéis pelo governo federal","Justiça Eleitoral criada em 1889"],0,"Troca de <b>votos por favores</b>."],
+["O estopim da Revolução de 1930 foi a morte de",["João Pessoa, na Confeitaria Glória, por João Dantas","Washington Luís, por João Dantas","Getúlio Vargas, no Recife","Estácio Coimbra","Lima Cavalcanti"],0,"Em <b>26 de julho de 1930</b>."],
+["Após 1930, em Pernambuco,",["Estácio Coimbra foi deposto, a Assembleia foi dissolvida e Lima Cavalcanti virou interventor","Coimbra foi mantido por Vargas","Dantas Barreto voltou ao governo","Agamenon foi eleito governador","a Revolução foi derrotada no Recife"],0,"Lima Cavalcanti: usineiro."],
+["Juarez Távora, no Governo Provisório, ficou conhecido como",["'vice-rei do Norte', pelo papel na escolha de interventores","chefe da Liga contra o Mocambo","líder da Intentona","interventor do Rio Grande do Sul","chefe do DIP"],0,"Delegado militar do Governo Provisório no Norte."],
+["O levante de 1935 no Recife foi",["de militares e civis ligados à ANL, como Gregório Bezerra, reprimido em poucos dias","liderado por Prestes, com 10 dias de governo","dos integralistas","vitorioso por três semanas","em 1937, contra o Estado Novo"],0,"Ligado à <b>Intentona Comunista</b>."],
+["Agamenon Magalhães foi",["ministro do Trabalho (1934–37), interventor (1937–45) e ministro da Justiça (1945)","ministro da Fazenda e governador eleito em 1935","interventor desde 1930","chefe de polícia em 1930","candidato à Presidência em 1945"],0,"Aplicou em PE a política social autoritária do Estado Novo."],
+["A Liga Social Contra o Mocambo (1939) buscava",["substituir mocambos por casas populares, símbolo da política social do Estado Novo","preservar os mocambos como patrimônio","enviar moradores ao sertão","financiar vilas operárias das usinas","combater a fome, sob Josué de Castro"],0,"Criada por <b>Agamenon</b>."],
+["Em 'Geografia da Fome' (1946), Josué de Castro defendeu que a fome",["é fenômeno social, ligado à estrutura econômica e ao latifúndio monocultor","decorre do clima semiárido","decorre do excesso de população","era só do sertão","decorre da miscigenação"],0,"Não era problema de clima ou de raça."],
+["Depois do Estado Novo, Agamenon",["fundou o PSD, foi eleito governador em 1950 e morreu em 1952, no mandato","fundou a UDN e foi ministro","foi exilado e voltou por golpe","foi prefeito do Recife","foi sucedido por Barbosa Lima em 1950"],0,"Voltou ao centro da política pernambucana."]]}
+];
+const RANKS=["Recruta","Soldado","Cabo","Sargento","Subtenente","Tenente","Capitão"];
+let S={xp:0,best:{}};
+try{S=Object.assign(S,JSON.parse(localStorage.getItem("pmpe")||"{}"))}catch(e){}
+const save=()=>{try{localStorage.setItem("pmpe",JSON.stringify(S))}catch(e){}};
+const $=id=>document.getElementById(id);
+const app=$("app");
+const lvl=()=>Math.floor(S.xp/100);
+const days=()=>Math.max(0,Math.ceil((new Date(2027,1,21)-new Date())/864e5));
+function theme(){const r=document.documentElement;const dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark"}
+function hdr(t,back){return `<div class="top">${back?'<button class="back" onclick="home()">← Trilha</button>':`<h1>🛡️ ${t}</h1>`}<button class="ico" onclick="theme()" aria-label="Trocar tema">🌓</button></div>`}
+function home(){
+const tot=D.reduce((a,m)=>a+m.q.length,0),pct=Math.min(100,S.xp%100);
+app.innerHTML=hdr("Trilha PMPE")+`<p class="small" style="margin:4px 0 0">Prova de Soldado: 21/02/2027. Um passo de cada vez.</p>
+<div class="hud"><div class="stats"><span class="pill">🎖️ ${RANKS[Math.min(lvl(),6)]}</span><span class="pill">⭐ ${S.xp} XP</span><span class="pill">⏳ ${days()} dias</span><span class="pill">🔥 ${S.streak||0} dia(s) seguidos</span></div>
+<div class="bar"><i style="width:${pct}%"></i></div><div class="small" style="margin-top:6px">${100-pct} XP para a próxima patente. Cada acerto vale 10 XP.</div></div>
+<div class="trail">${D.map((m,i)=>{const b=S.best[m.id]||0;return `<button class="node ${b>=70?"done":""}" onclick="open_(${i})"><span class="dot">${b>=70?"✓":m.e}</span><h3>${m.n}</h3><div class="small">${m.c.length} cards de revisão e ${m.q.length} questões${b?` · melhor: ${b}%`:""}</div><div class="bar"><i style="width:${b}%"></i></div></button>`}).join("")}</div>
+<button class="go" style="margin:0 0 14px;width:100%" onclick="sim()">📝 Fazer simulado (60 questões)${S.sim?` · melhor: ${S.sim}/60`:""}</button>${(S.err||[]).length?`<button class="go" style="margin:0 0 14px;width:100%;background:var(--glow);border:2px solid var(--bad);color:var(--tx)" onclick="trein()">🎯 Treino de erros (${S.err.length})</button>`:""}<button class="go" style="margin:0 0 14px;width:100%;background:var(--sun)" onclick="sim(1)">🔥 Simulado difícil (avançadas primeiro)</button><p class="small">Dica: leia os cards, depois jogue o quiz. Errar aqui é de graça e ensina mais que acertar.</p>`}
+function open_(i,mode){
+const m=D[i];mode=mode||"cola";
+app.innerHTML=hdr("",1)+`<h2>${m.e} ${m.n}</h2><div class="tabs"><button class="tab ${mode==="cola"?"on":""}" onclick="open_(${i},'cola')">📖 Revisão rápida</button><button class="tab ${mode==="quiz"?"on":""}" onclick="quiz(${i})">🎮 Quiz</button></div>`+
+(mode==="cola"?m.c.map(c=>`<details><summary>${c[0]}</summary><p>${c[1]}</p></details>`).join("")+`<button class="go" onclick="quiz(${i})">Ir para o quiz</button>`:"");
+}
+let Q={};
+function quiz(i){Q={i,k:0,ok:0,l:shuf(D[i].q.slice()).map(sh)};ask()}
+function trein(){const t=D.flatMap(m=>m.q).filter(q=>(S.err||[]).includes(q[0]));if(!t.length)return;Q={i:0,k:0,ok:0,v:{id:"er",n:"Treino de erros",e:"🎯",q:t},l:shuf(t.slice()).map(sh)};ask()}
+function ask(){
+const m=Q.v||D[Q.i],q=Q.l[Q.k];
+app.innerHTML=hdr("",1)+`<h2>${m.e} ${m.n}</h2><div class="tabs"><button class="tab" onclick="${Q.v?'home()':`open_(${Q.i})`}">${Q.v?'🏠 Trilha':'📖 Revisão rápida'}</button><button class="tab on">🎮 Quiz</button></div>
+<div class="small" style="margin-bottom:6px">Questão ${Q.k+1} de ${m.q.length}</div><div class="bar" style="margin-bottom:12px"><i style="width:${Q.k/m.q.length*100}%"></i></div>
+<div class="q"><h2>${q[0]}</h2>${q[1].map((o,j)=>`<button class="opt" onclick="pick(${j})">${"ABCDE"[j]}) ${o}</button>`).join("")}<div id="fb"></div></div>`}
+function pick(j){
+const m=Q.v||D[Q.i],q=Q.l[Q.k],hit=j===q[2];
+document.querySelectorAll(".opt").forEach((b,x)=>{b.disabled=true;if(x===q[2])b.classList.add("ok");else if(x===j)b.classList.add("bad")});
+const td=new Date().toDateString();if(S.day!==td){S.streak=S.day===new Date(Date.now()-864e5).toDateString()?(S.streak||0)+1:1;S.day=td}
+if(hit){Q.ok++;S.xp+=10}
+S.err=S.err||[];const ix=S.err.indexOf(q[0]);if(hit&&ix>-1)S.err.splice(ix,1);if(!hit&&ix<0)S.err.push(q[0]);save();
+const last=Q.k+1===m.q.length;
+$("fb").innerHTML=`<div class="exp pop"><b>${hit?"🎉 Acertou! +10 XP":"💡 Quase! Veja o macete:"}</b><br>${q[3]}</div><button class="go" onclick="${last?"done()":"Q.k++;ask()"}">${last?"Ver resultado":"Próxima"}</button>`}
+function done(){
+const m=Q.v||D[Q.i],p=Math.round(Q.ok/m.q.length*100);
+S.best[m.id]=Math.max(S.best[m.id]||0,p);save();
+app.innerHTML=hdr("",1)+`<div class="q end pop"><div class="big">${p>=70?"🏆":p>=40?"💪":"🌱"}</div><h2>${Q.ok} de ${m.q.length} acertos (${p}%)</h2><p>${p>=70?"Estação concluída! Siga a trilha.":"Releia os cards e tente de novo. A repetição é o atalho."}</p><button class="go" style="margin:10px auto 0" onclick="${Q.v?'trein()':`quiz(${Q.i})`}">Jogar de novo</button><button class="back" onclick="home()">Voltar à trilha</button></div>`}
+let SM=null,tm=null;
+const clock=()=>{const s=Math.floor((Date.now()-SM.t0)/1e3);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")};
+const shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const sh=q=>{const o=shuf(q[1].map((t,i)=>[t,i===q[2]]));return [q[0],o.map(x=>x[0]),o.findIndex(x=>x[1]),q[3],q[4]]};
+function sim(h){
+const L=[];["pt","hp","rl","in","dc","dh"].forEach(id=>{const p=shuf((id==="hp"?D.filter(x=>["hp","co","nh","rv","rp"].includes(x.id)).flatMap(x=>x.q):D.find(x=>x.id===id).q).slice());const ord=h?p.filter(q=>q[4]).concat(p.filter(q=>!q[4])):p;ord.slice(0,10).forEach(q=>L.push({m:id,q:sh(q)}))});
+SM={L,k:0,a:Array(L.length).fill(-1),t0:Date.now()};
+clearInterval(tm);tm=setInterval(()=>{const e=$("clk");if(e)e.textContent=clock()},1000);simAsk()}
+function simAsk(){
+const {L,k,a}=SM,it=L[k],m=D.find(x=>x.id===it.m),n=a.filter(x=>x>=0).length;
+app.innerHTML=hdr("",1)+`<h2>📝 Simulado PMPE</h2><div class="stats" style="margin-top:8px"><span class="pill">⏱️ <span id="clk">${clock()}</span></span><span class="pill">${m.e} ${m.n}</span><span class="pill">${n}/60 respondidas</span></div>
+<div class="small" style="margin-bottom:6px">Questão ${k+1} de 60. Gabarito só no fim, como na prova.</div><div class="bar" style="margin-bottom:12px"><i style="width:${(k+1)/60*100}%"></i></div>
+<div class="q"><h2>${it.q[0]}</h2>${it.q[1].map((o,j)=>`<button class="opt ${a[k]===j?"sel":""}" onclick="mark(${j})">${"ABCDE"[j]}) ${o}</button>`).join("")}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px"><button class="back" ${k?"":"disabled"} onclick="SM.k--;simAsk()">← Anterior</button>${k<59?`<button class="go" style="margin:0" onclick="SM.k++;simAsk()">Próxima</button>`:`<button class="go" style="margin:0" onclick="fim()">Finalizar</button>`}</div></div>`}
+function mark(j){SM.a[SM.k]=j;simAsk()}
+function fim(){
+clearInterval(tm);
+const R={};SM.L.forEach((it,i)=>{R[it.m]=(R[it.m]||0)+(SM.a[i]===it.q[2]?1:0)});
+const tot=Object.values(R).reduce((x,y)=>x+y,0);
+const B=[["Bloco I",["pt","hp"]],["Bloco II",["rl","in"]],["Bloco III",["dc","dh"]]].map(([n,ids])=>[n,ids.reduce((s,i)=>s+R[i],0)]);
+const pass=B.every(b=>b[1]>=6)&&tot>=18&&Object.values(R).every(v=>v>0);
+S.sim=Math.max(S.sim||0,tot);S.xp+=tot*2;S.err=S.err||[];SM.L.forEach((it,i)=>{if(SM.a[i]!==it.q[2]&&!S.err.includes(it.q[0]))S.err.push(it.q[0])});save();
+const err=SM.L.map((it,i)=>[it,i]).filter(([it,i])=>SM.a[i]!==it.q[2]);
+app.innerHTML=hdr("",1)+`<div class="q end pop"><div class="big">${tot>=42?"🏆":pass?"✅":"🌱"}</div><h2>${tot} de 60 (${Math.round(tot/60*100)}%)</h2><p>${pass?"Você passaria nos cortes mínimos desta etapa. Agora é subir a nota para entrar na classificação.":"Ainda abaixo do corte mínimo (30% por bloco e 30% no total). Revise os erros abaixo e repita."}</p><div class="small">Tempo: ${clock()} · +${tot*2} XP</div></div>
+<h3 style="margin:16px 0 4px">Por matéria</h3>${["pt","hp","rl","in","dc","dh"].map(id=>{const m=D.find(x=>x.id===id);return `<div class="row"><span>${m.e} ${m.n}</span><span>${R[id]}/10</span></div><div class="bar"><i style="width:${R[id]*10}%"></i></div>`}).join("")}
+<p class="small">${B.map(b=>`${b[0]}: ${b[1]}/20`).join(" · ")}. Mínimo: 6 por bloco.</p>
+<h3 style="margin:16px 0 8px">Revise seus erros (${err.length})</h3>${err.map(([it,i])=>`<details><summary>Questão ${i+1}</summary><p>${it.q[0]}</p><p>Sua resposta: ${SM.a[i]<0?"em branco":it.q[1][SM.a[i]]}<br>Correta: <b>${it.q[1][it.q[2]]}</b></p><p>${it.q[3]}</p></details>`).join("")}
+<button class="go" onclick="sim()">Refazer simulado</button>`}
+home();
+</script></body></html>
